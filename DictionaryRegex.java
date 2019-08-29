@@ -2,8 +2,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DictionaryRegex {
+	String pattern;
+	Pattern p1;
+	Matcher m1;
+	boolean found1;
+	private String txt = "spite·ful\n/ˈspītfəl/\nLearn to pronounce\nadjective\nadjective: spiteful\nshowing or caused by malice.\n\"the teachers made spiteful little jokes about me\"\nsynonyms:	malicious, mean, nasty, cruel, unkind, unfriendly, snide, hurtful, wounding, barbed, cutting, hateful, ill-natured, bitter, venomous, poisonous, acid, hostile, rancorous, malevolent, evil-intentioned, baleful, vindictive, vengeful, vitriolic, vicious, splenetic, malign, malignant, bilious; More\nantonyms:	benevolent, kind, friendly";
+
+	private void Match(String pattern){
+		Pattern p = Pattern.compile(pattern);
+		Matcher m = p.matcher(txt);
+		boolean found = m.find();
+		System.out.println(m.group());
+	}
+
 	public static void main (String[]args){
-		String pattern1 = ("(\\w+\\·\\w+\n)");
+		DictionaryRegex dr = new DictionaryRegex();
+		dr.Match("(\\w+\\·\\w+\n)");
+		dr.Match("(\\/.+\\/)");
+		dr.Match("(Learn to pronounce\n)");
+		dr.Match("(adjective|verb)");
+		dr.Match("(adjective: \\w+|verb: \\w+)");
+		dr.Match("([a-zA-Z -]+\\.)");
+		dr.Match("(\"[a-zA-Z ]+\")");
+		dr.Match("(synonyms:\\s[a-zA-z, -_]+)");
+		dr.Match("(antonyms:\\s[a-zA-z, -_]+)");
+	  /*String pattern1 = ("(\\w+\\·\\w+\n)");
 		String pattern2 = ("(\\/.+\\/)");
 		String pattern3 = ("(Learn to pronounce\n)");
 		String pattern4 = ("(adjective|verb)");
@@ -59,6 +82,6 @@ public class DictionaryRegex {
 		System.out.println(m6.group());
 		System.out.println(m7.group());
 		System.out.println(m8.group());
-		System.out.println(m9.group());
+		System.out.println(m9.group());*/
 	}
 }
