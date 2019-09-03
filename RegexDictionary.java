@@ -1,10 +1,10 @@
-package RegexDictionary;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintStream;
 public class RegexDictionary {
 	String pattern;
 	Pattern p1;
@@ -12,11 +12,11 @@ public class RegexDictionary {
 	boolean found1;
 	//private String txt = "spite·ful\n/ˈspītfəl/\nLearn to pronounce\nadjective\nadjective: spiteful\nshowing or caused by malice.\n\"the teachers made spiteful little jokes about me\"\nsynonyms:	malicious, mean, nasty, cruel, unkind, unfriendly, snide, hurtful, wounding, barbed, cutting, hateful, ill-natured, bitter, venomous, poisonous, acid, hostile, rancorous, malevolent, evil-intentioned, baleful, vindictive, vengeful, vitriolic, vicious, splenetic, malign, malignant, bilious; More\nantonyms:	benevolent, kind, friendly";
 	String txt = "";
-        String csvFile = "E:\\project\\Java\\DictionaryRegex\\RegexDictionary-master\\dictionary.csv";
+        String csvFile = "C:\\Users\\apollo\\Documents\\Alpha and Omega\\JavaBoiz\\dictionary.tsv";
         BufferedReader br = null;
         String line = "";
         //String cvsSplitBy = ",";
-        
+
         private void readCSV(){
             try{
                 br = new BufferedReader(new FileReader(csvFile));
@@ -45,24 +45,43 @@ public class RegexDictionary {
             }
         }
         private void Match(String pattern){
-		Pattern p = Pattern.compile(pattern);
-		Matcher m = p.matcher(txt);
-		boolean found = m.find();
-		System.out.println(m.group());
-	}
+        	try {
+        		//PrintStream out = new PrintStream(System.out, true, "UTF-8");
+        		Pattern p = Pattern.compile(pattern);
+				Matcher m = p.matcher(txt);
+				boolean found = m.find();
+				System.out.println(m.group());
+        	}
+        	catch(Exception e){
+        		System.out.println(e);
+        	}
+		}
+		private boolean checkMatch(String pattern){
+    		//PrintStream out = new PrintStream(System.out, true, "UTF-8");
+    		Pattern p = Pattern.compile(pattern);
+			Matcher m = p.matcher(txt);
+			boolean found = m.find();
+			return found;
+			//System.out.println(m.group());
+		}
 
 	public static void main (String[]args){
 		RegexDictionary dr = new RegexDictionary();
                 dr.readCSV();
-                System.out.println(dr.txt);
-		dr.Match("(\\w+\\·\\w+)");
+                //System.out.println(dr.txt);
+		dr.Match("([a-zA-Z·]+)");
 		dr.Match("(\\/.+\\/)");
-		dr.Match("(Learn to pronounce)");
+		dr.Match("(\\sLearn to pronounce)");
 		dr.Match("(adjective|verb|noun)");
 		dr.Match("(adjective: \\w+|verb: \\w+|noun: \\w+)");
 		dr.Match("([a-zA-Z -]+\\.)");
 		dr.Match("(\"[a-zA-Z ]+\")");
-		dr.Match("(synonyms:\\s[a-zA-z, -_]+)");
+		if (dr.checkMatch("(synonyms:\\s[a-zA-z, -_]+)")){
+			dr.Match("(synonyms:\\s[a-zA-z, -_]+)");
+		}
+		if (dr.checkMatch("(antonyms:\\s[a-zA-z, -_]+)")){
+			dr.Match("(antonyms:\\s[a-zA-z, -_]+)");
+		}
 		//dr.Match("(antonyms:\\s[a-zA-z, -_]+)");
 	  /*String pattern1 = ("(\\w+\\·\\w+\n)");
 		String pattern2 = ("(\\/.+\\/)");
