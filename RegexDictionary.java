@@ -12,7 +12,7 @@ public class RegexDictionary {
 	boolean found1;
 	//private String txt = "spite·ful\n/ˈspītfəl/\nLearn to pronounce\nadjective\nadjective: spiteful\nshowing or caused by malice.\n\"the teachers made spiteful little jokes about me\"\nsynonyms:	malicious, mean, nasty, cruel, unkind, unfriendly, snide, hurtful, wounding, barbed, cutting, hateful, ill-natured, bitter, venomous, poisonous, acid, hostile, rancorous, malevolent, evil-intentioned, baleful, vindictive, vengeful, vitriolic, vicious, splenetic, malign, malignant, bilious; More\nantonyms:	benevolent, kind, friendly";
 	String txt = "";
-        String csvFile = "C:\\Users\\apollo\\Documents\\Alpha and Omega\\JavaBoiz\\dictionary.tsv";
+        String csvFile = "D:\\Project\\RegexDictionary-master\\dictionary.tsv";
         BufferedReader br = null;
         String line = "";
         //String cvsSplitBy = ",";
@@ -67,14 +67,14 @@ public class RegexDictionary {
 
 	public static void main (String[]args){
 		RegexDictionary dr = new RegexDictionary();
-                dr.readCSV();
+        dr.readCSV();
                 //System.out.println(dr.txt);
 		dr.Match("([a-zA-Z·]+)");
 		dr.Match("(\\/.+\\/)");
-		dr.Match("(\\sLearn to pronounce)");
+		dr.Match("(\\s?Learn to pronounce)");
 		dr.Match("(adjective|verb|noun)");
-		dr.Match("(adjective: \\w+|verb: \\w+|noun: \\w+)");
-		dr.Match("([a-zA-Z -]+\\.)");
+		dr.Match("(adjective: [\\w;:]+|verb: [\\w;:]+|noun: [\\w;:]+)");
+		dr.Match("([a-zA-Z -0-9]+\\.)");
 		dr.Match("(\"[a-zA-Z ]+\")");
 		if (dr.checkMatch("(synonyms:\\s[a-zA-z, -_]+)")){
 			dr.Match("(synonyms:\\s[a-zA-z, -_]+)");
