@@ -1,10 +1,19 @@
+package regexDictionary;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;  
+
 public class RegexDictionary {
 	String pattern;
 	Pattern p1;
@@ -44,17 +53,20 @@ public class RegexDictionary {
                 }
             }
         }
-        private void Match(String pattern){
+        private String Match(String pattern){
+        	String result = "";
         	try {
         		//PrintStream out = new PrintStream(System.out, true, "UTF-8");
         		Pattern p = Pattern.compile(pattern);
 				Matcher m = p.matcher(txt);
 				boolean found = m.find();
-				System.out.println(m.group());
+				result = m.group().toString();
+				return result;
         	}
         	catch(Exception e){
         		System.out.println(e);
         	}
+			return result;
 		}
 		private boolean checkMatch(String pattern){
     		//PrintStream out = new PrintStream(System.out, true, "UTF-8");
@@ -64,28 +76,60 @@ public class RegexDictionary {
 			return found;
 			//System.out.println(m.group());
 		}
-
+		
 	public static void main (String[]args){
+		String url = "jdbc:mysql://localhost:3306/regexDictionary";
+		String user = "root";
+		String password = "root";
+		String DRIVER_CLASS = "com.mysql.jdbc.Driver";
+		
+		String definition = "";
 		RegexDictionary dr = new RegexDictionary();
         dr.readCSV();
-               //System.out.println(dr.txt);
-		dr.Match("([a-zA-Z·]+)");
-		dr.Match("(\\/.+\\/)");
-		if (dr.checkMatch("(\\s?Learn to pronounce)")) {
-			dr.Match("(\\s?Learn to pronounce)");
-		}
-		dr.Match("(adjective|verb|noun)");
-		dr.Match("(adjective: [A-Za-z0-9;:\\s]+|verb: [A-Za-z0-9;:\\s]+|noun: [A-Za-z0-9;:\\s]+)");
+        //System.out.println(dr.txt);
+		String head_word = dr.Match("([a-zA-Z·]+)");
+		String pronounciation = dr.Match("(\\/.+\\/)");
+		//if (dr.checkMatch("(\\s?Learn to pronounce)")) {
+		//	dr.Match("(\\s?Learn to pronounce)");
+		//}
+		//dr.Match("(adjective|verb|noun)");
+		definition = definition.concat(dr.Match("(adjective: [A-Za-z0-9;:\\s]+|verb: [A-Za-z0-9;:\\s]+|noun: [A-Za-z0-9;:\\s]+)")+"\n");
 		if (dr.checkMatch("([0-9]+\\.)")) {
-			dr.Match("([a-zA-Z0-9]+\\.)");
-			dr.Match("([a-zA-Z ]+\\.)");
+			definition = definition.concat(dr.Match("([a-zA-Z0-9]+\\.)")+"\n");
+			definition = definition.concat(dr.Match("([a-zA-Z ]+\\.)")+"\n");
 		}	
-		dr.Match("(\"[a-zA-Z ]+\")");
+		definition = definition.concat(dr.Match("(\"[a-zA-Z ]+\")")+"\n");
 		if (dr.checkMatch("(synonyms:\\s[a-zA-z, -_]+)")){
-			dr.Match("(synonyms:\\s[a-zA-z, -_]+)");
+			definition = definition.concat(dr.Match("(synonyms:\\s[a-zA-z, -_]+)")+"\n");
 		}
 		if (dr.checkMatch("(antonyms:\\s[a-zA-z, -_]+)")){
-			dr.Match("(antonyms:\\s[a-zA-z, -_]+)");
+			definition = definition.concat(dr.Match("(antonyms:\\s[a-zA-z, -_]+)")+"\n");
+		}
+		System.out.println(head_word);
+		System.out.println(pronounciation);
+		System.out.println(definition);
+		
+		
+		
+		try {
+			JDBCMySQLDemo demo = new JDBCMySQLDemo();
+			
+			Connection connection = DriverManager.getConnection(url,user,password);
+			Statement statement = connection.createStatement();
+			String add = "insert into dictionary_results "
+					+ " (head_word,pronounciation,definition)"
+				 	+ " value (?,?,?)";
+			PreparedStatement queryVar = connection.prepareStatement(add);
+			queryVar.setString(1, head_word);
+			queryVar.setString(2, pronounciation);
+			queryVar.setString(3, definition);
+			queryVar.execute();
+			
+			//statement.executeUpdate(add);
+			System.out.println("Insert Completed");
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 }
