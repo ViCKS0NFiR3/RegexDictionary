@@ -1,7 +1,6 @@
 package regexDictionary;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -109,11 +108,8 @@ public class RegexDictionary {
 		System.out.println(pronounciation);
 		System.out.println(definition);
 		
-		
-		
 		try {
-			JDBCMySQLDemo demo = new JDBCMySQLDemo();
-			
+			//JDBCMySQLDemo demo = new JDBCMySQLDemo();
 			Connection connection = DriverManager.getConnection(url,user,password);
 			Statement statement = connection.createStatement();
 			String add = "insert into dictionary_results "
