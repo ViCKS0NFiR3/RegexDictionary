@@ -56,9 +56,10 @@ public class JDBCMySQLDemo {
 	   */
 	}
 	
-	public void getData() throws SQLException {
+	public String[] getData() throws SQLException {
 		JDBCMySQLDemo demo = new JDBCMySQLDemo();
 		Connection connection = DriverManager.getConnection(demo.url,demo.user,demo.password);
+		String[] result = null;
 		try {
 			Statement statement = connection.createStatement();
 			String query = "select * from dictionary_results";
@@ -66,14 +67,13 @@ public class JDBCMySQLDemo {
 			 ResultSet rs = statement.executeQuery(query);
 			 while (rs.next())
 	            {
-	                String id = rs.getString(1);
-	                String headword = rs.getString(2);
-	                String pronounciation = rs.getString(3);
-	                String definition = rs.getString(4);
-	                System.out.println(id);
-	                System.out.println(headword);
-	                System.out.println(pronounciation);
-	                System.out.println(definition);
+	                result = new String[4];
+				 	result[0]= rs.getString(1);
+	                result[1] = rs.getString(2);
+	                result[2] = rs.getString(3);
+	                result[3] = rs.getString(4);
+	                
+	                return result;
 	            }
 			//System.out.println("Connection Success");
 		} catch (SQLException e) {
@@ -85,6 +85,7 @@ public class JDBCMySQLDemo {
 				System.out.println(e);
 			}
 		}
+		return result;
 	}
 }
 	
